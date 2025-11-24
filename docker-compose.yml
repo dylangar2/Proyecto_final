@@ -1,0 +1,22 @@
+version: "3.8"
+services:
+  rpm:
+    build: ./imagen1-rpm
+    container_name: rpm-tools
+    tty: true
+  ruby:
+    build: ./imagen2-ruby
+    container_name: ruby-env
+    tty: true
+  node:
+    build: ./imagen3-node
+    container_name: node-env
+    tty: true
+  python:
+    build: ./imagen4-python
+    container_name: python-env
+    tty: true
+  full:
+    build: ./imagen5-full
+    container_name: full-env
+    tty: true
