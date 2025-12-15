@@ -1,0 +1,43 @@
+pipeline {
+    agent any
+ 
+    environment {
+        COMPOSE_FILE = 'docker-compose.yml'
+    }
+ 
+    stages {
+ 
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+ 
+        stage('Build Docker images') {
+            steps {
+                sh """
+                    echo "Construyendo imágenes..."
+                    docker-compose build
+                """
+            }
+        }
+ 
+        stage('Levantar contenedores') {
+            steps {
+                sh """
+                    echo "Levantando contenedores..."
+                    docker-compose up -d
+                """
+            }
+        }
+    }
+ 
+    post {
+        always {
+            sh """
+                echo "Deteniendo contenedores..."
+                docker-compose down || true
+            """
+        }
+    }
+}

@@ -20,3 +20,5 @@ services:
     build: ./imagen5-full
     container_name: full-env
     tty: true
+
+    
