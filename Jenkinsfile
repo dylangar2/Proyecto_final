@@ -1,43 +1,43 @@
 pipeline {
     agent any
 
-    stages {
+    environment {
+        // Aquí puedes poner variables de SonarQube si las tienes configuradas en Jenkins
+        SONAR_SCANNER = "C:\\ProgramData\\sonar-scanner\\bin\\sonar-scanner.bat"
+        PROJECT_KEY = "proyecto2"
+        PROJECT_NAME = "Proyecto 2"
+        PROJECT_VERSION = "1.0"
+        SONAR_HOST_URL = "http://localhost:9000" // Cambia a tu URL de SonarQube
+        SONAR_LOGIN = "TU_TOKEN_DE_SONAR"       // Cambia por tu token de SonarQube
+    }
 
+    stages {
         stage('Checkout') {
             steps {
-                checkout scm
+                git 'https://github.com/dylangar2/proyecto2.git'
             }
         }
-stage('SonarQube Analysis') {
-    steps {
-        withSonarQubeEnv('SonarQube') {
-            bat '''
-            C:\ProgramData\sonar-scanner\bin\sonar-scanner.bat
-            -Dsonar.projectKey=proyecto2
-            -Dsonar.sources=.
-            -Dsonar.host.url=http://localhost:9000
-            '''
+
+        stage('Build') {
+            steps {
+                echo 'Aquí iría tu compilación o build si aplica'
+            }
+        }
+
+        stage('SonarQube Analysis') {
+            steps {
+                // Ejecuta SonarScanner con la ruta corregida
+                bat "${env.SONAR_SCANNER} -Dsonar.projectKey=${env.PROJECT_KEY} -Dsonar.projectName=${env.PROJECT_NAME} -Dsonar.projectVersion=${env.PROJECT_VERSION} -Dsonar.sources=. -Dsonar.host.url=${env.SONAR_HOST_URL} -Dsonar.login=${env.SONAR_LOGIN}"
+            }
         }
     }
-}
 
-
-        stage('Build Docker Image') {
-            steps {
-                bat 'docker-compose build'
-            }
+    post {
+        success {
+            echo 'Pipeline completado con éxito.'
         }
-
-        stage('Tag Docker Image') {
-            steps {
-                bat 'docker tag proyecto2-ci-1-full:latest dylan226/proyecto2:ci'
-            }
-        }
-
-        stage('Push Docker Image') {
-            steps {
-                bat 'docker push dylan226/proyecto2:ci'
-            }
+        failure {
+            echo 'Pipeline falló. Revisa los logs.'
         }
     }
 }
