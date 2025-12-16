@@ -18,5 +18,6 @@ services:
     tty: true
   full:
     build: ./imagen5-full
-    image: dylangar2/proyecto1
+    image: dylan226/proyecto1
+  
 
