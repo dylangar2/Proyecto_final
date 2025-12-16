@@ -18,7 +18,5 @@ services:
     tty: true
   full:
     build: ./imagen5-full
-    container_name: full-env
-    tty: true
+    image: dylangar2/proyecto1
 
-    
